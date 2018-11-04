@@ -113,7 +113,12 @@ static char *make_config_name(void)
 #endif
     strcat(p, OPENSSL_CONF);
 
-    return p;
+    if (access(p, R_OK) == 0)
+        return p;
+
+    OPENSSL_free(p);
+
+    return OPENSSL_strdup("/usr/share/defaults/ssl/openssl.cnf");
 }
 
 int main(int argc, char *argv[])

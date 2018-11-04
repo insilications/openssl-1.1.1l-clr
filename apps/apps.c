@@ -509,6 +509,9 @@ int app_load_modules(const CONF *config)
 
     if (config == NULL)
         config = to_free = app_load_config_quiet(default_config_file);
+    /* clearlinux: use OS defaults if no explicit or /etc/ cnf found */
+    if (config == NULL)
+        config = to_free = app_load_config_quiet("/usr/share/defaults/ssl/openssl.cnf");
     if (config == NULL)
         return 1;
 

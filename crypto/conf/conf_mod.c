@@ -9,6 +9,7 @@
 
 #include "internal/cryptlib.h"
 #include <stdio.h>
+#include <unistd.h>
 #include <ctype.h>
 #include <openssl/crypto.h>
 #include "internal/conf.h"
@@ -499,8 +500,12 @@ char *CONF_get1_default_config_file(void)
         return NULL;
     BIO_snprintf(file, len + 1, "%s%s%s", X509_get_default_cert_area(),
                  sep, OPENSSL_CONF);
+    if (access(file, R_OK) == 0)
+        return file;
 
-    return file;
+    OPENSSL_free(file);
+
+    return OPENSSL_strdup("/usr/share/defaults/ssl/openssl.cnf");
 }
 
 /*

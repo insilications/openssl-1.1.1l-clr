@@ -55,8 +55,13 @@ DEFINE_LHASH_OF(MEM);
 
 # ifndef OPENSSL_SYS_VMS
 #  define X509_CERT_AREA          OPENSSLDIR
-#  define X509_CERT_DIR           OPENSSLDIR "/certs"
-#  define X509_CERT_FILE          OPENSSLDIR "/cert.pem"
+/* Misleading, but the X509_CERT_AREA is used in places to fetch configs
+ * and should remain set to /etc/ssl. We modify the path to the cert
+ * areas instead to point to the cache location
+ */
+#  define CACHE_CERT_AREA         "/var/cache/ca-certs"
+#  define X509_CERT_DIR           CACHE_CERT_AREA "/certs"
+#  define X509_CERT_FILE          CACHE_CERT_AREA "/compat/ca-roots.pem"
 #  define X509_PRIVATE_DIR        OPENSSLDIR "/private"
 #  define CTLOG_FILE              OPENSSLDIR "/ct_log_list.cnf"
 # else
